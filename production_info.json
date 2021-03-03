@@ -1,0 +1,54 @@
+[
+  {
+    "type":"metal mine",
+    "carbon_gen":".25",
+    "category":"mine",
+    "power_gen":"-.1",
+    "aluminum_gen":".25",
+    "requires":"aluminum,carbon"
+  },
+  {
+    "type":"elemental quarry",
+    "power":"-.1",
+    "carbon_gen":".25",
+    "silicon_gen":".25",
+    "category":"mine",
+    "requires":"carbon,silicon"
+  },
+  {
+    "type":"water pump",
+    "category":"mine,life support",
+    "power_gen":"-.2",
+    "water_gen":".25",
+    "requires:":"water"
+  },
+  {
+    "type":"solar condenser",
+    "category":"mine",
+    "water_gen":"1.5",
+    "oxygen_gen":".5",
+    "carbon_gen":".5",
+    "requires:":"dry ice, water ice"
+  },
+  {
+    "type:":"geothermal plant",
+    "category":"power",
+    "power":"2.0",
+    "requires":"geothermal vent"
+  },
+  {
+    "type":"solar panel",
+    "category":"power"
+  },
+  {
+    "type:":"wind turbine",
+    "category":"power"
+  },
+  {
+    "type:":"electrolysis reactor",
+    "category":"life support",
+    "power":"-.3",
+    "water":"-1.0",
+    ""
+  }
+]
