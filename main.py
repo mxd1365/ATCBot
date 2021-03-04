@@ -282,7 +282,12 @@ async def buildings_command(ctx):
 
     await ctx.channel.send("id | type | owner | tile_ind\n" +
                            str(c.fetchall()))
-
+@bot.command(name="skele")
+async def skele_command(ctx):
+  e = discord.Embed()
+  file = discord.File("skele.gif")
+  e.set_image(url="attachment://skele.gif")
+  await ctx.channel.send(file=file, embed=e)
 
 @bot.command(name="players")
 async def players_command(ctx):
