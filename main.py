@@ -9,6 +9,7 @@ import json
 
 from hex_map import create_requested_map_image, create_map
 from utils import create_db_urls, send_confirm_box
+from PIL import Image, ImageSequence
 
 continue_ticking = False
 
@@ -146,13 +147,6 @@ def create_game_db(guild_dir_url, channel_dir_url, gamedb_url):
 
     conn.commit()
 
-@bot.command(name="try")
-async def skele_command(ctx):
-  e = discord.Embed()
-  file = discord.File("YodaDoOrDoNot.gif")
-  e.set_image(url="attachment://YodaDoOrDoNot.gif")
-  await ctx.channel.send(file=file, embed=e)
-
 @bot.command(name="makegame")
 async def make_game_command(ctx, force=False):
 
@@ -285,11 +279,41 @@ async def buildings_command(ctx):
 
     await ctx.channel.send("id | type | owner | tile_ind\n" +
                            str(c.fetchall()))
+
+
 @bot.command(name="skele")
 async def skele_command(ctx):
   e = discord.Embed()
   file = discord.File("skele.gif")
   e.set_image(url="attachment://skele.gif")
+  await ctx.channel.send(file=file, embed=e)
+
+
+@bot.command(name="smallskele")
+async def smallskele_command(ctx):
+  size = 160, 120
+  im = Image.open("skele.gif")
+  frames = ImageSequence.Iterator(im)
+  def thumbnails(frames):
+    for frame in frames:
+        thumbnail = frame.copy()
+        thumbnail.thumbnail(size, Image.ANTIALIAS)
+        yield thumbnail
+  frames = thumbnails(frames)
+  om = next(frames) # Handle first frame separately
+  om.info = im.info # Copy sequence info
+  om.save("out.gif", save_all=True, append_images=list(frames))
+  e = discord.Embed()
+  file = discord.File("out.gif")
+  e.set_image(url="attachment://out.gif")
+  await ctx.channel.send(file=file, embed=e)
+
+
+@bot.command(name="try")
+async def try_command(ctx):
+  e = discord.Embed()
+  file = discord.File("YodaDoOrDoNot.gif")
+  e.set_image(url="attachment://YodaDoOrDoNot.gif")
   await ctx.channel.send(file=file, embed=e)
 
 @bot.command(name="players")
