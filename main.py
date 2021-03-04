@@ -146,9 +146,12 @@ def create_game_db(guild_dir_url, channel_dir_url, gamedb_url):
 
     conn.commit()
 
-@bot.command(name="dab")
-async def dab(ctx, force=False):
-  await ctx.channel.send("DAB")
+@bot.command(name="try")
+async def skele_command(ctx):
+  e = discord.Embed()
+  file = discord.File("YodaDoOrDoNot.gif")
+  e.set_image(url="attachment://YodaDoOrDoNot.gif")
+  await ctx.channel.send(file=file, embed=e)
 
 @bot.command(name="makegame")
 async def make_game_command(ctx, force=False):
