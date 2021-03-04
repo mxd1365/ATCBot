@@ -150,7 +150,6 @@ def create_game_db(guild_dir_url, channel_dir_url, gamedb_url):
 async def dab(ctx, force=False):
   await ctx.channel.send("DAB")
 
-
 @bot.command(name="makegame")
 async def make_game_command(ctx, force=False):
 
