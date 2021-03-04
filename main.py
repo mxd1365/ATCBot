@@ -142,10 +142,7 @@ def create_game_db(guild_dir_url, channel_dir_url, gamedb_url):
 
         sql_add_building_info = """ INSERT INTO production_building_info
                                 VALUES (?,?,?,?,?,?,?,?,?);"""
-        cursor.execute(
-            sql_add_building_info,
-            (b['type'], b['category'], carbon_gen, alum_gen, power_gen,
-             silicon_gen, water_gen, oxygen_gen, required_terrain))
+        cursor.execute(sql_add_building_info,(b['type'], b['category'], carbon_gen, alum_gen, power_gen,silicon_gen, water_gen, oxygen_gen, required_terrain))
 
     conn.commit()
 
@@ -305,6 +302,9 @@ async def players_command(ctx):
 
     await ctx.channel.send('`' + row_str + '`')
 
+@bot.command(name="stockpile")
+async def stockpile_command(ctx):
+  print("thing")
 
 #endregion
 

@@ -31,7 +31,7 @@
     "requires:":"dry ice, water ice"
   },
   {
-    "type:":"geothermal plant",
+    "type":"geothermal plant",
     "category":"power",
     "power":"2.0",
     "requires":"geothermal vent"
@@ -41,14 +41,13 @@
     "category":"power"
   },
   {
-    "type:":"wind turbine",
+    "type":"wind turbine",
     "category":"power"
   },
   {
-    "type:":"electrolysis reactor",
+    "type":"electrolysis reactor",
     "category":"life support",
     "power":"-.3",
-    "water":"-1.0",
-    ""
+    "water":"-1.0"
   }
 ]
