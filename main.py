@@ -14,7 +14,7 @@ continue_ticking = False
 
 query_dic = dict()
 
-bot = commands.Bot(command_prefix='%%')
+bot = commands.Bot(command_prefix=os.getenv("COMMAND_PREFIX"))
 
 all_game_db_urls = []
 
