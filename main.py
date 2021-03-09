@@ -103,8 +103,18 @@ def create_game_db(guild_dir_url, channel_dir_url, gamedb_url):
                                       required_terrain TEXT NOT NULL
 
                                   ); """
-
     c.execute(sql_create_building_info_table)
+
+    sql_create_resource_table = """ CREATE TABLE IF NOT EXISTS resources (
+                                      resource TEXT PRIMARY KEY NOT NULL,
+                                      abbreviation TEXT NOT NULL,
+                                      type TEXT NOT NULL,
+                                      rate REAL NOT NULL DEFAULT 0.0,
+                                      quantity REAL DEFAULT 0,
+                                      price REAL NOT NULL DEFAULT 45
+
+                                  ); """
+    c.execute(sql_create_resource_table)
 
     info_file = open("production_info.json", "r")
     buildings = json.loads(info_file.read())
@@ -144,6 +154,29 @@ def create_game_db(guild_dir_url, channel_dir_url, gamedb_url):
         sql_add_building_info = """ INSERT INTO production_building_info
                                 VALUES (?,?,?,?,?,?,?,?,?);"""
         cursor.execute(sql_add_building_info,(b['type'], b['category'], carbon_gen, alum_gen, power_gen,silicon_gen, water_gen, oxygen_gen, required_terrain))
+
+    conn.commit()
+    
+    resource_file = open("resource_info.json", "r")
+    resources = json.loads(resource_file.read())
+    print(resources)
+    
+    for r in resources:
+      rate = 0.0
+      if "rate" in r:
+        rate = r['rate']
+      
+      quantity = 0
+      if "quantity" in r:
+        quantity = r['quantity']
+      
+      price = 0
+      if "price" in r:
+        price = r['price']
+
+      sql_add_resource_info = """ INSERT INTO resources
+                                  VALUES(?,?,?,?,?,?);"""
+      cursor.execute(sql_add_resource_info, (r['name'], r['abbreviation'], r['type'], rate, quantity, price))
 
     conn.commit()
 
