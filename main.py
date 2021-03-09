@@ -394,7 +394,7 @@ class TickCog(commands.Cog):
                 conn.row_factory = sqlite3.Row
                 c = conn.cursor()
                 update_game_table(c)
-                update_players_table(c)
+                update_players_table(c, conn)
                 conn.commit()
             except Error as e:
                 print(e)
@@ -405,7 +405,7 @@ def update_game_table(cursor):
     cursor.execute(sql_tick_update)
 
 
-def update_players_table(cursor):
+def update_players_table(cursor, conn):
     get_total_players = "SELECT name FROM players"
     cursor.execute(get_total_players)
     players_rows = cursor.fetchall()
@@ -422,6 +422,7 @@ def update_players_table(cursor):
     for r in players_rows:
         #get all of players buildings
         total_carbon_gen = total_alum_gen = total_power_gen = total_sil_gen = total_water_gen = 0
+        new_carb_amut = new_alum_amt = new_sil_amt = new_water_amt = 0
         sql_get_buildings = "SELECT type, tile_ind FROM buildings WHERE owner=?;"
 
         for building_r in cursor.execute(sql_get_buildings,
@@ -435,35 +436,42 @@ def update_players_table(cursor):
                 gen_rates = rate_dic[building_r["type"]]
                 #carbon update
                 carbon_rate = gen_rates[0] * float(tile_r["carbon_strength"])
-                print(carbon_rate)
                 total_carbon_gen += carbon_rate
-                print(total_carbon_gen)
 
                 #aluminum update
                 alum_rate = gen_rates[2] * float(tile_r["aluminum_strength"])
-                print(alum_rate)
                 total_alum_gen += alum_rate
-                print(total_alum_gen)
 
                 #silicon update
                 sil_rate = gen_rates[3] * float(tile_r["silicon_strength"])
-                print(sil_rate)
                 total_sil_gen += sil_rate
-                print(total_sil_gen)
 
                 #water update
                 water_rate = gen_rates[4] * float(tile_r["water_strength"])
-                print(tile_r["water_strength"])
-                print(water_rate)
                 total_water_gen += water_rate
-                print(total_water_gen)
+        
 
-                #need to do power calculations but need ma
+        #check for negative resources
+        for player_row in cursor.execute("""SELECT carbon_amt, aluminum_amt,silicon_amt,water_amt FROM players"""):
+          new_carb_amt = max(total_carbon_gen + player_row["carbon_amt"],0)
+          print("new_carb_amt:{0}".format(new_carb_amt))
+          new_alum_amt = max(total_alum_gen + player_row["aluminum_amt"],0)
+          print("new_alum_amt:{0}".format(new_alum_amt))
+          new_sil_amt = max(total_sil_gen + player_row["silicon_amt"],0)
+          print("new_sil_amt:{0}".format(new_sil_amt))
+          new_water_amt = max(total_water_gen + player_row["water_amt"],0)
+          print("new_water_amt:{0}".format(new_water_amt))
+
 
         cursor.execute(
-            """ UPDATE players SET carbon_amt=carbon_amt+?, aluminum_amt=aluminum_amt+?, silicon_amt=silicon_amt+?, water_amt=water_amt+? WHERE name = ?;""",
-            (total_carbon_gen, total_alum_gen, total_sil_gen, total_water_gen,
+            """ UPDATE players SET carbon_amt=?, aluminum_amt=?, silicon_amt=?, water_amt=? WHERE name = ?;""",
+            (new_carb_amt, new_alum_amt, new_sil_amt, new_water_amt,
              r["name"]))
+
+        conn.commit()
+
+        
+
 
 
 @bot.command(name="map")
